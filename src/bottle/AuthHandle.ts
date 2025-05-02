@@ -5,8 +5,8 @@ import {
   initAuthCreds,
   proto,
   SignalDataTypeMap,
-} from "@adiwajshing/baileys";
-import { DataSource } from "typeorm";
+} from "@whiskeysockets/baileys";
+import { DataSource, Repository } from "typeorm";
 import { Auth } from "../entity/Auth";
 
 const KEY_MAP: { [T in keyof SignalDataTypeMap]: string } = {
@@ -19,10 +19,15 @@ const KEY_MAP: { [T in keyof SignalDataTypeMap]: string } = {
 };
 
 export default class AuthHandle {
-  constructor(private ds: DataSource, private key: string) {}
-  private repos = {
-    auth: this.ds.getRepository(Auth),
+  private repos: {
+    auth: Repository<Auth>;
   };
+
+  constructor(private ds: DataSource, private key: string) {
+    this.repos = {
+      auth: this.ds.getRepository(Auth),
+    };
+  }
 
   useAuthHandle = async (): Promise<{
     state: AuthenticationState;

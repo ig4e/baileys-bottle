@@ -1,10 +1,10 @@
+import { Boom } from "@hapi/boom";
 import makeWASocket, {
   DisconnectReason,
   fetchLatestBaileysVersion,
-} from "@adiwajshing/baileys";
-import log from "@adiwajshing/baileys/lib/Utils/logger";
-import BaileysBottle from "..";
-import { Boom } from "@hapi/boom";
+} from "@whiskeysockets/baileys";
+import log from "@whiskeysockets/baileys/lib/Utils/logger";
+import BaileysBottle from "../";
 
 console.clear();
 console.log("Initializing DB...");
@@ -15,7 +15,7 @@ BaileysBottle.init({
   console.log("DB initialized");
   const client = async (clientName: string) => {
     console.log(`Starting client "${clientName}"`);
-    
+
     const logger = log.child({});
     logger.level = "silent";
 

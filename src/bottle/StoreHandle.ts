@@ -1,24 +1,24 @@
 import {
   BaileysEventEmitter,
   ConnectionState,
+  Contact,
   jidNormalizedUser,
   toNumber,
-  updateMessageWithReceipt,
   updateMessageWithReaction,
-  WAMessageKey,
+  updateMessageWithReceipt,
   WAMessageCursor,
-  Contact,
+  WAMessageKey,
   WASocket,
-} from "@adiwajshing/baileys";
+} from "@whiskeysockets/baileys";
+import { DataSource, In, Repository } from "typeorm";
+import { Auth } from "../entity/Auth";
 import { Chat as DBChat } from "../entity/Chat";
 import { Contact as DBContact } from "../entity/Contact";
+import { GroupMetadata as DBGroupMetadata } from "../entity/GroupMetadata";
 import { Message as DBMessage } from "../entity/Message";
 import { MessageDic as DBMessageDic } from "../entity/MessageDic";
-import { PresenceDic as DBPresenceDic } from "../entity/PresenceDic";
 import { Presence as DBPresence } from "../entity/Presence";
-import { GroupMetadata as DBGroupMetadata } from "../entity/GroupMetadata";
-import { DataSource, In } from "typeorm";
-import { Auth } from "../entity/Auth";
+import { PresenceDic as DBPresenceDic } from "../entity/PresenceDic";
 
 export interface StoreHandleOptions {
   disableDelete?: ("chats" | "messages")[];
@@ -34,14 +34,24 @@ export default class StoreHandle {
       disableDelete: [],
       ...(this.options || {}),
     };
+
+    this.repos = {
+      contacts: this.ds.getRepository(DBContact),
+      chats: this.ds.getRepository(DBChat),
+      messageDics: this.ds.getRepository(DBMessageDic),
+      messages: this.ds.getRepository(DBMessage),
+      presenceDics: this.ds.getRepository(DBPresenceDic),
+      groups: this.ds.getRepository(DBGroupMetadata),
+    };
   }
-  private repos = {
-    contacts: this.ds.getRepository(DBContact),
-    chats: this.ds.getRepository(DBChat),
-    messageDics: this.ds.getRepository(DBMessageDic),
-    messages: this.ds.getRepository(DBMessage),
-    presenceDics: this.ds.getRepository(DBPresenceDic),
-    groups: this.ds.getRepository(DBGroupMetadata),
+
+  private repos: {
+    contacts: Repository<DBContact>;
+    chats: Repository<DBChat>;
+    messageDics: Repository<DBMessageDic>;
+    messages: Repository<DBMessage>;
+    presenceDics: Repository<DBPresenceDic>;
+    groups: Repository<DBGroupMetadata>;
   };
 
   state: ConnectionState = { connection: "close" };

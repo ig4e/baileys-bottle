@@ -3,6 +3,7 @@ import AuthHandle from "./bottle/AuthHandle";
 import StoreHandle, { StoreHandleOptions } from "./bottle/StoreHandle";
 import DB from "./DB";
 import { Auth } from "./entity/Auth";
+
 class BaileysBottle {
   static instance = new BaileysBottle();
   private constructor() {}
